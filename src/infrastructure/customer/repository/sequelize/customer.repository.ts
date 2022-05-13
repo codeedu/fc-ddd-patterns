@@ -1,6 +1,6 @@
 import Customer from "../../../../domain/customer/entity/customer";
-import Address from "../../../../domain/customer/value-object/address";
 import CustomerRepositoryInterface from "../../../../domain/customer/repository/customer-repository.interface";
+import Address from "../../../../domain/customer/value-object/address";
 import CustomerModel from "./customer.model";
 
 export default class CustomerRepository implements CustomerRepositoryInterface {
@@ -37,17 +37,8 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
   }
 
   async find(id: string): Promise<Customer> {
-    let customerModel;
-    try {
-      customerModel = await CustomerModel.findOne({
-        where: {
-          id,
-        },
-        rejectOnEmpty: true,
-      });
-    } catch (error) {
-      throw new Error("Customer not found");
-    }
+    const customerModel = await CustomerModel.findOne({ where: { id } });
+    if (!customerModel) throw new Error('Customer not found');
 
     const customer = new Customer(id, customerModel.name);
     const address = new Address(
