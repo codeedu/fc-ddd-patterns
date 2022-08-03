@@ -1,4 +1,5 @@
 import OrderItem from "./order_item";
+
 export default class Order {
   private _id: string;
   private _customerId: string;
@@ -23,6 +24,13 @@ export default class Order {
 
   get items(): OrderItem[] {
     return this._items;
+  }
+
+  addItems(items: OrderItem[]): Order {
+    this._items.push(...items);
+    this._total = this.total();
+    this.validate();
+    return this;
   }
 
   validate(): boolean {
