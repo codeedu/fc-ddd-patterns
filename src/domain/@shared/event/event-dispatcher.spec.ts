@@ -12,9 +12,9 @@ describe("Domain events tests", () => {
     expect(
       eventDispatcher.getEventHandlers["ProductCreatedEvent"]
     ).toBeDefined();
-    expect(eventDispatcher.getEventHandlers["ProductCreatedEvent"].length).toBe(
-      1
-    );
+    expect(
+      eventDispatcher.getEventHandlers["ProductCreatedEvent"].length
+    ).toBe(1);
     expect(
       eventDispatcher.getEventHandlers["ProductCreatedEvent"][0]
     ).toMatchObject(eventHandler);
@@ -35,9 +35,9 @@ describe("Domain events tests", () => {
     expect(
       eventDispatcher.getEventHandlers["ProductCreatedEvent"]
     ).toBeDefined();
-    expect(eventDispatcher.getEventHandlers["ProductCreatedEvent"].length).toBe(
-      0
-    );
+    expect(
+      eventDispatcher.getEventHandlers["ProductCreatedEvent"].length
+    ).toBe(0);
   });
 
   it("should unregister all event handlers", () => {
@@ -74,7 +74,9 @@ describe("Domain events tests", () => {
       price: 10.0,
     });
 
-    // Quando o notify for executado o SendEmailWhenProductIsCreatedHandler.handle() deve ser chamado
+    // Quando o notify for executado, o
+    // SendEmailWhenProductIsCreatedHandler.handle()
+    // deve ser chamado
     eventDispatcher.notify(productCreatedEvent);
 
     expect(spyEventHandler).toHaveBeenCalled();
