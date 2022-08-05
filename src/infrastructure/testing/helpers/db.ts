@@ -3,7 +3,7 @@ import { Sequelize, SequelizeOptions } from "sequelize-typescript";
 const sequelizeOptions: SequelizeOptions = {
     dialect: "sqlite",
     storage: ":memory:",
-    logging: true,
+    logging: false,
     sync: { force: true },
 };
 

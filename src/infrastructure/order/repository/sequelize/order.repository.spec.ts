@@ -38,10 +38,13 @@ describe("Order repository test", () => {
     address = new Address("Street 1", 1, "Zipcode 1", "City 1");
     customer.changeAddress(address);
     await customerRepository.create(customer);
+
     productRepository = new ProductRepository();
     product = new Product("111", "Product 1", 10);
     product2 = new Product("222", "Product 2", 15);
     await productRepository.create(product);
+    await productRepository.create(product2);
+
     orderItem = new OrderItem(
       "1",
       product.name,
@@ -60,7 +63,6 @@ describe("Order repository test", () => {
 
   it("should create a new order", async () => {
     const order = new Order("9876", customer.id, [orderItem]);
-
     const orderRepository = new OrderRepository();
     await orderRepository.create(order);
 
@@ -68,7 +70,6 @@ describe("Order repository test", () => {
       where: { id: order.id },
       include: ["items"],
     });
-
     expect(orderModel.toJSON()).toStrictEqual({
       id: order.id,
       customer_id: customer.id,
@@ -88,22 +89,21 @@ describe("Order repository test", () => {
   
   it("should update an order adding more items", async () => {
     let order = new Order("9876", customer.id, [orderItem]);
-
     const orderRepository = new OrderRepository();
     await orderRepository.create(order);
-    
-    orderRepository.update(order.addItems([orderItem2]));
+
+    const newOrder = order.addItems([orderItem2]);
+    await orderRepository.update(newOrder);
+    expect(order.id).toBe(newOrder.id);
 
     const orderModel = await OrderModel.findOne({
       where: { id: order.id },
       include: ["items"],
     });
-
-    console.log(orderModel.toJSON());
     expect(orderModel.toJSON()).toStrictEqual({
       id: order.id,
       customer_id: customer.id,
-      total: order.total(),
+      total: newOrder.total(),
       items: [
         {
           id: orderItem.id,
@@ -113,14 +113,14 @@ describe("Order repository test", () => {
           order_id: order.id,
           product_id: product.id,
         },
-        // {
-        //   id: orderItem2.id,
-        //   name: orderItem2.name,
-        //   price: orderItem2.price,
-        //   quantity: orderItem2.quantity,
-        //   order_id: order.id,
-        //   product_id: product2.id,
-        // },
+        {
+          id: orderItem2.id,
+          name: orderItem2.name,
+          price: orderItem2.price,
+          quantity: orderItem2.quantity,
+          order_id: order.id,
+          product_id: product2.id,
+        },
       ],
     });
   });
