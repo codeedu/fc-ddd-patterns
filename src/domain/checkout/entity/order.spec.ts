@@ -28,6 +28,8 @@ describe("Order unit tests", () => {
     let total = order.total();
 
     expect(order.total()).toBe(200);
+    expect(item.price).toBe(100)
+    expect(item2.price).toBe(200)
 
     const order2 = new Order("o1", "c1", [item, item2]);
     total = order2.total();
